@@ -25,7 +25,7 @@ function BMIRing({ bmi }: { bmi: number }) {
   let color = "#22c55e"; let label = "Normal"; let bg = "bg-green-50"; let tc = "text-green-600";
   if (bmi < 18.5) { color = "#60a5fa"; label = "Underweight"; bg = "bg-blue-50"; tc = "text-blue-500"; }
   else if (bmi >= 25 && bmi < 30) { color = "#f97316"; label = "Overweight"; bg = "bg-orange-50"; tc = "text-orange-500"; }
-  else if (bmi >= 30) { color = "#ef4444"; label = "Obese"; bg = "bg-red-50"; tc = "text-red-500"; }
+  else if (bmi >= 30) { color = "#b91c1c"; label = "Obese"; bg = "bg-red-50"; tc = "text-red-800"; }
   return (
     <div className="flex flex-col items-center gap-2">
       <div className="relative w-32 h-32">
@@ -235,7 +235,7 @@ export default function ProfilePage() {
           {/* Logout */}
           <button
             onClick={handleLogout}
-            className="hidden md:flex w-full items-center justify-center gap-2 py-3 rounded-xl border-2 border-red-200 text-red-500 font-semibold text-sm hover:bg-red-50 transition-colors"
+            className="hidden md:flex w-full items-center justify-center gap-2 py-3 rounded-xl border-2 border-red-300 text-red-800 font-semibold text-sm hover:bg-red-50 transition-colors"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
             Log out
@@ -352,7 +352,7 @@ export default function ProfilePage() {
 
                   {/* Mobile logout */}
                   <button onClick={handleLogout}
-                    className="md:hidden w-full py-3.5 rounded-xl border-2 border-red-200 text-red-500 font-semibold hover:bg-red-50 transition-colors">
+                    className="md:hidden w-full py-3.5 rounded-xl border-2 border-red-300 text-red-800 font-semibold hover:bg-red-50 transition-colors">
                     Log out
                   </button>
                 </div>
@@ -391,7 +391,7 @@ export default function ProfilePage() {
                         <span className={`text-3xl ${!a.unlocked ? "grayscale opacity-30" : ""}`}>{a.icon}</span>
                         {a.unlocked && (
                           <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }}
-                            className="text-[10px] font-bold text-amber-600 bg-amber-100 px-2 py-0.5 rounded-full">
+                            className="text-xs font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full">
                             Unlocked
                           </motion.span>
                         )}
@@ -426,7 +426,7 @@ export default function ProfilePage() {
                     </div>
                     <input ref={fileInputRef} type="file" accept=".json,application/json" className="hidden" onChange={handleImport} />
                     {importMessage === "success" && <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-sm text-green-600 mt-3 font-medium">✓ Data restored successfully.</motion.p>}
-                    {importMessage === "error" && <p className="text-sm text-red-500 mt-3">Invalid file. Please use an EquaFit backup JSON.</p>}
+                    {importMessage === "error" && <p className="text-sm text-red-800 font-medium mt-3">Invalid file. Please use an EquaFit backup JSON.</p>}
                   </div>
 
                   <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200">
@@ -439,7 +439,7 @@ export default function ProfilePage() {
                   </div>
 
                   <button onClick={handleLogout}
-                    className="md:hidden w-full py-3.5 rounded-xl border-2 border-red-200 text-red-500 font-semibold hover:bg-red-50 transition-colors">
+                    className="md:hidden w-full py-3.5 rounded-xl border-2 border-red-300 text-red-800 font-semibold hover:bg-red-50 transition-colors">
                     Log out
                   </button>
                 </div>

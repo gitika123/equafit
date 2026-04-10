@@ -7,7 +7,7 @@ import { ROUTINE_GROUPS } from "@/lib/routines";
 import { getCompletedDays } from "@/lib/user-store";
 
 const GRADIENTS: Record<string, { from: string; to: string; shadow: string }> = {
-  primary: { from: "#F4511E", to: "#FF8A65", shadow: "rgba(244,81,30,0.25)" },
+  primary: { from: "#d84315", to: "#FF8A65", shadow: "rgba(216,67,21,0.28)" },
   accent:  { from: "#00897B", to: "#00BCD4", shadow: "rgba(0,137,123,0.2)" },
   purple:  { from: "#7C3AED", to: "#A855F7", shadow: "rgba(124,58,237,0.25)" },
   blue:    { from: "#0EA5E9", to: "#6366F1", shadow: "rgba(14,165,233,0.2)" },
@@ -88,7 +88,7 @@ export default function RoutinesPage() {
                     <h2 className="font-bold text-dark text-base">{group.name}</h2>
                     {isStarted && (
                       <span
-                        className="text-[10px] font-bold px-2 py-0.5 rounded-full text-white"
+                        className="text-xs font-bold px-2 py-0.5 rounded-full text-white"
                         style={{ background: `linear-gradient(135deg, ${g.from}, ${g.to})` }}
                       >
                         {pct}%

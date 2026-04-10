@@ -33,7 +33,7 @@ function WeekCard({
           </span>
           <div>
             {highlight && (
-              <p className="text-[10px] font-bold uppercase tracking-widest text-emerald-600 mb-1">This week</p>
+              <p className="text-xs font-bold uppercase tracking-widest text-emerald-800 mb-1">This week</p>
             )}
             <h2 className="text-lg font-black text-dark leading-tight">{week.title}</h2>
             <p className="text-sm text-muted mt-0.5">{week.subtitle}</p>
@@ -92,12 +92,12 @@ export default function DietFuelPage() {
           <div className="absolute -top-8 -right-8 w-40 h-40 rounded-full bg-white/10" />
           <div className="absolute bottom-0 left-0 w-32 h-32 rounded-full bg-black/10 -translate-x-1/4 translate-y-1/4" />
           <div className="relative z-10">
-            <p className="text-white/80 text-xs font-bold uppercase tracking-widest mb-2">Nutrition</p>
+            <p className="text-white text-xs font-bold uppercase tracking-widest mb-2 drop-shadow-sm">Nutrition</p>
             <h1 className="text-3xl md:text-4xl font-black leading-tight">Diet Fuel Guide</h1>
-            <p className="text-white/90 text-sm md:text-base mt-2 max-w-xl leading-relaxed">
+            <p className="text-white text-sm md:text-base mt-2 max-w-xl leading-relaxed drop-shadow-sm">
               Budget-friendly ideas that rotate each week — no paywalls, just practical fuel for students and busy routines.
             </p>
-            <p className="text-white/70 text-xs mt-4 font-medium">
+            <p className="text-white/90 text-xs mt-4 font-medium">
               Calendar week {isoWeek} · Theme &quot;{current.title}&quot;
             </p>
           </div>

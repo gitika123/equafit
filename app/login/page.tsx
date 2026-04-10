@@ -23,7 +23,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: "linear-gradient(160deg, #0F172A 0%, #1E293B 40%, #F4511E 100%)" }}>
+    <div className="min-h-screen flex flex-col" style={{ background: "linear-gradient(160deg, #0F172A 0%, #1E293B 40%, #b8320e 100%)" }}>
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-primary/20 blur-3xl" />
@@ -47,7 +47,7 @@ export default function LoginPage() {
             <span className="text-4xl">⚡</span>
           </motion.div>
           <h1 className="text-4xl font-black text-white tracking-tight">EquaFit</h1>
-          <p className="text-white/60 text-sm mt-2 font-medium">Your body. Your routine. Your vibe.</p>
+          <p className="text-white/90 text-sm mt-2 font-medium">Your body. Your routine. Your vibe.</p>
         </motion.div>
 
         {/* Form card */}
@@ -95,7 +95,7 @@ export default function LoginPage() {
                 <motion.p
                   initial={{ opacity: 0, y: -4 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="text-sm text-red-500 font-medium"
+                  className="text-sm text-red-800 font-semibold"
                 >
                   {error}
                 </motion.p>
@@ -112,9 +112,9 @@ export default function LoginPage() {
             </form>
           </div>
 
-          <p className="text-center text-white/60 text-sm mt-5 font-medium">
+          <p className="text-center text-white/90 text-sm mt-5 font-medium">
             New here?{" "}
-            <Link href="/signup" className="text-white font-bold underline underline-offset-2">
+            <Link href="/signup" className="text-white font-bold underline underline-offset-2 decoration-2">
               Create account
             </Link>
           </p>
@@ -125,7 +125,7 @@ export default function LoginPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
-          className="text-center text-white/30 text-xs font-medium"
+          className="text-center text-white/80 text-xs font-medium"
         >
           Built for students · CS 161 · Team 4
         </motion.p>

@@ -4,10 +4,10 @@ export function DailyMotivation() {
 
   return (
     <section className="mb-6 p-4 bg-white rounded-xl border border-gray-100 shadow-sm">
-      <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">
+      <h2 className="text-sm font-semibold text-muted uppercase tracking-wide mb-2">
         Daily motivation
       </h2>
-      <p className="text-gray-800 mb-2">{message}</p>
+      <p className="text-dark mb-2">{message}</p>
       <p className="text-sm text-[rgb(41,98,255)] font-medium">{suggestion}</p>
     </section>
   );

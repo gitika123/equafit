@@ -52,7 +52,7 @@ export default function ProgressPage() {
 
     let s = 0;
     const today = new Date().toISOString().slice(0, 10);
-    const sorted = [...byDate].sort().reverse();
+    const sorted = Array.from(byDate).sort().reverse();
     for (const d of sorted) {
       if (msToDays(new Date(today).getTime() - new Date(d).getTime()) === s) s++;
       else break;
@@ -84,7 +84,7 @@ export default function ProgressPage() {
   function logWeight() {
     const kg = parseFloat(newWeight);
     if (!kg || kg < 20 || kg > 300) return;
-    addWeightEntry(formatDate(new Date()), kg);
+    addWeightEntry({ date: formatDate(new Date()), weightKg: kg });
     setWeights(getWeightLog());
     setNewWeight("");
     weightInputRef.current?.blur();
@@ -143,7 +143,7 @@ export default function ProgressPage() {
           >
             <div className="flex items-start justify-between mb-4">
               <span className="text-2xl">{s.icon}</span>
-              <span className="text-[11px] font-semibold text-muted bg-white/70 px-2.5 py-1 rounded-full">{s.sub}</span>
+              <span className="text-xs font-semibold text-muted bg-white/80 px-2.5 py-1 rounded-full">{s.sub}</span>
             </div>
             <p className={`text-4xl font-black leading-none ${s.val}`}>
               <AnimCount to={typeof s.value === "number" ? s.value : 0} />
@@ -197,7 +197,7 @@ export default function ProgressPage() {
               <div className="flex items-center gap-1.5">
                 <span className="text-xs text-muted">less</span>
                 {[0, 1, 2, 3].map((v) => (
-                  <div key={v} className="w-3 h-3 rounded-sm" style={{ background: v === 0 ? "#F1F5F9" : `rgba(244,81,30,${0.2 + v * 0.27})` }} />
+                  <div key={v} className="w-3 h-3 rounded-sm" style={{ background: v === 0 ? "#F1F5F9" : `rgba(216,67,21,${0.2 + v * 0.27})` }} />
                 ))}
                 <span className="text-xs text-muted">more</span>
               </div>
@@ -246,15 +246,15 @@ export default function ProgressPage() {
                 <svg width="100%" viewBox={`0 0 ${WW} ${WH}`} preserveAspectRatio="none" className="h-28">
                   <defs>
                     <linearGradient id="wGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#F4511E" stopOpacity="0.25" />
-                      <stop offset="100%" stopColor="#F4511E" stopOpacity="0.02" />
+                      <stop offset="0%" stopColor="#d84315" stopOpacity="0.25" />
+                      <stop offset="100%" stopColor="#d84315" stopOpacity="0.02" />
                     </linearGradient>
                   </defs>
                   <path
                     d={`${weightPath} L${WW},${WH} L0,${WH} Z`}
                     fill="url(#wGrad)"
                   />
-                  <path d={weightPath} fill="none" stroke="#F4511E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d={weightPath} fill="none" stroke="#d84315" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </div>
             ) : (

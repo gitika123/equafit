@@ -61,12 +61,22 @@ function FuelIcon({ active }: { active: boolean }) {
     </svg>
   );
 }
+function VibeIcon({ active }: { active: boolean }) {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={active ? 2.2 : 1.8} strokeLinecap="round" strokeLinejoin="round">
+      <path d="M9 18V5l12-2v13" />
+      <circle cx="6" cy="18" r="3" />
+      <circle cx="18" cy="16" r="3" />
+    </svg>
+  );
+}
 
 const navItems = [
   { href: "/",          label: "Home",     Icon: HomeIcon },
   { href: "/routines",  label: "Routines", Icon: RoutinesIcon },
   { href: "/progress",  label: "Progress", Icon: ProgressIcon },
   { href: "/diet-fuel", label: "Fuel",     Icon: FuelIcon },
+  { href: "/vibesync",  label: "Vibe",     Icon: VibeIcon },
   { href: "/period",    label: "Cycle",    Icon: CycleIcon },
   { href: "/reminders", label: "Remind",   Icon: BellIcon },
   { href: "/profile",   label: "Profile",  Icon: ProfileIcon },
@@ -101,7 +111,7 @@ export function BottomNav({ showBottomNav }: BottomNavProps) {
             </div>
             <div>
               <p className="font-black text-dark text-base leading-tight">EquaFit</p>
-              <p className="text-[10px] text-muted font-medium">Wellness · CS 161</p>
+              <p className="text-xs text-muted font-medium">Wellness · CS 161</p>
             </div>
           </div>
         </div>
@@ -138,7 +148,7 @@ export function BottomNav({ showBottomNav }: BottomNavProps) {
 
         {/* Footer */}
         <div className="px-4 py-4 border-t border-slate-50">
-          <p className="text-[10px] text-muted/60 font-medium">Team 4 · Spring 2026</p>
+          <p className="text-xs text-muted font-medium">Team 4 · Spring 2026</p>
         </div>
       </motion.aside>
 
@@ -169,10 +179,10 @@ export function BottomNav({ showBottomNav }: BottomNavProps) {
                         transition={{ type: "spring", damping: 26, stiffness: 400 }}
                       />
                     )}
-                    <span className={`relative transition-colors duration-200 ${active ? "text-primary" : "text-slate-400"}`}>
+                    <span className={`relative transition-colors duration-200 ${active ? "text-primary" : "text-slate-600"}`}>
                       <Icon active={active} />
                     </span>
-                    <span className={`relative text-[10px] font-semibold mt-0.5 tracking-wide transition-colors duration-200 ${active ? "text-primary" : "text-slate-400"}`}>
+                    <span className={`relative text-xs font-semibold mt-0.5 tracking-wide transition-colors duration-200 ${active ? "text-primary" : "text-slate-600"}`}>
                       {label}
                     </span>
                   </Link>

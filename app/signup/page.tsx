@@ -47,7 +47,7 @@ export default function SignupPage() {
             <span className="text-4xl">🌱</span>
           </motion.div>
           <h1 className="text-4xl font-black text-white tracking-tight">Join EquaFit</h1>
-          <p className="text-white/60 text-sm mt-2 font-medium">One account. All your goals.</p>
+          <p className="text-white/90 text-sm mt-2 font-medium">One account. All your goals.</p>
         </motion.div>
 
         {/* Form card */}
@@ -95,7 +95,7 @@ export default function SignupPage() {
                 <motion.p
                   initial={{ opacity: 0, y: -4 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="text-sm text-red-500 font-medium"
+                  className="text-sm text-red-800 font-semibold"
                 >
                   {error}
                 </motion.p>
@@ -112,9 +112,9 @@ export default function SignupPage() {
             </form>
           </div>
 
-          <p className="text-center text-white/60 text-sm mt-5 font-medium">
+          <p className="text-center text-white/90 text-sm mt-5 font-medium">
             Already have an account?{" "}
-            <Link href="/login" className="text-white font-bold underline underline-offset-2">
+            <Link href="/login" className="text-white font-bold underline underline-offset-2 decoration-2">
               Log in
             </Link>
           </p>
@@ -124,7 +124,7 @@ export default function SignupPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
-          className="text-center text-white/30 text-xs font-medium"
+          className="text-center text-white/80 text-xs font-medium"
         >
           Built for students · CS 161 · Team 4
         </motion.p>

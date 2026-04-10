@@ -36,7 +36,7 @@ export function DietFuelPreview() {
               {week.icon}
             </span>
             <div className="min-w-0 flex-1">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-emerald-700 mb-1">This week</p>
+              <p className="text-xs font-bold uppercase tracking-widest text-emerald-800 mb-1">This week</p>
               <p className="font-black text-dark text-lg leading-tight">{week.title}</p>
               <p className="text-sm text-muted mt-1">{week.subtitle}</p>
               <p className="text-sm text-dark/90 mt-3 leading-relaxed line-clamp-2 sm:line-clamp-none">

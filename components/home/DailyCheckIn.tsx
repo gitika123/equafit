@@ -25,7 +25,7 @@ export function DailyCheckIn({
 }: Props) {
   return (
     <section className="mb-6 p-4 bg-white rounded-xl border border-gray-100 shadow-sm">
-      <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">
+      <h2 className="text-sm font-semibold text-muted uppercase tracking-wide mb-4">
         Quick check-in
       </h2>
       <div className="space-y-4">
@@ -71,8 +71,8 @@ function Slider({
   return (
     <div>
       <div className="flex justify-between text-sm mb-1">
-        <span className="font-medium text-gray-700">{label}</span>
-        <span className="text-gray-400 text-xs">
+        <span className="font-medium text-dark">{label}</span>
+        <span className="text-muted text-xs">
           {lowLabel} ← → {highLabel}
         </span>
       </div>

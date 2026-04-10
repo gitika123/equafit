@@ -8,7 +8,7 @@ import { getGroupById, getRoutineDays, getExerciseTutorialUrl } from "@/lib/rout
 import { addCompletedDay } from "@/lib/user-store";
 
 const GRADIENTS: Record<string, { from: string; to: string }> = {
-  primary: { from: "#F4511E", to: "#FF8A65" },
+  primary: { from: "#d84315", to: "#FF8A65" },
   accent:  { from: "#00897B", to: "#00BCD4" },
   purple:  { from: "#7C3AED", to: "#A855F7" },
   blue:    { from: "#0EA5E9", to: "#6366F1" },
@@ -88,9 +88,9 @@ export default function RoutineDayPage() {
             {group.icon}
           </div>
           <div>
-            <p className="text-white/70 text-xs font-semibold uppercase tracking-widest">Day {dayNum} of {group.totalDays}</p>
+            <p className="text-white/95 text-xs font-semibold uppercase tracking-widest">Day {dayNum} of {group.totalDays}</p>
             <h1 className="text-white font-black text-xl leading-tight">{group.name}</h1>
-            <p className="text-white/75 text-sm">{group.durationMinutes} min · {dayData.exercises.length} exercises</p>
+            <p className="text-white/90 text-sm">{group.durationMinutes} min · {dayData.exercises.length} exercises</p>
           </div>
         </div>
 

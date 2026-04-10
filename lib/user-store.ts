@@ -156,7 +156,7 @@ export function getProgressStats(completed: CompletedDay[]) {
   completed.forEach((d) => {
     byDate.set(d.date, (byDate.get(d.date) || 0) + 1);
   });
-  const sortedDates = [...byDate.keys()].sort();
+  const sortedDates = Array.from(byDate.keys()).sort();
   let longestStreak = 0;
   let current = 0;
   let lastDate: string | null = null;

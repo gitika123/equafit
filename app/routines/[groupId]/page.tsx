@@ -7,7 +7,7 @@ import { getGroupById, getRoutineDays } from "@/lib/routines";
 import { getCompletedDays } from "@/lib/user-store";
 
 const GRADIENTS: Record<string, { from: string; to: string; shadow: string }> = {
-  primary: { from: "#F4511E", to: "#FF8A65", shadow: "rgba(244,81,30,0.25)" },
+  primary: { from: "#d84315", to: "#FF8A65", shadow: "rgba(216,67,21,0.28)" },
   accent:  { from: "#00897B", to: "#00BCD4", shadow: "rgba(0,137,123,0.2)" },
   purple:  { from: "#7C3AED", to: "#A855F7", shadow: "rgba(124,58,237,0.25)" },
   blue:    { from: "#0EA5E9", to: "#6366F1", shadow: "rgba(14,165,233,0.2)" },
@@ -68,7 +68,7 @@ export default function RoutineGroupPage() {
           </div>
           <div className="flex-1">
             <h1 className="text-white font-black text-2xl leading-tight">{group.name}</h1>
-            <p className="text-white/75 text-sm mt-0.5">{group.tagline} · {group.durationMinutes} min/day</p>
+            <p className="text-white/90 text-sm mt-0.5">{group.tagline} · {group.durationMinutes} min/day</p>
             <div className="flex items-center gap-3 mt-3">
               <div className="flex-1 h-2 bg-white/25 rounded-full overflow-hidden">
                 <motion.div
@@ -78,7 +78,7 @@ export default function RoutineGroupPage() {
                   className="h-full bg-white/80 rounded-full"
                 />
               </div>
-              <span className="text-white/80 text-xs font-bold whitespace-nowrap">{doneCount}/{group.totalDays} days</span>
+              <span className="text-white text-xs font-bold whitespace-nowrap drop-shadow-sm">{doneCount}/{group.totalDays} days</span>
             </div>
           </div>
         </div>

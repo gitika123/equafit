@@ -43,13 +43,13 @@ function CompleteContent() {
   return (
     <main className="min-h-screen flex flex-col items-center justify-center px-6 pb-24">
       <div className="w-full max-w-sm flex items-center justify-between mb-8">
-        <Link href="/" className="text-gray-500 text-sm font-medium hover:text-primary">
+        <Link href="/" className="text-muted text-sm font-semibold hover:text-primary">
           ← Home
         </Link>
         <Link
           replace
           href={groupId ? `/routines/${groupId}` : "/routines"}
-          className="text-gray-500 text-sm font-medium hover:text-primary"
+          className="text-muted text-sm font-semibold hover:text-primary"
         >
           All days
         </Link>
@@ -69,7 +69,7 @@ function CompleteContent() {
           🎉
         </motion.span>
         <h1 className="text-3xl font-black text-dark">Good work!</h1>
-        <p className="text-gray-500 mt-2">
+        <p className="text-muted mt-2 font-medium">
           You crushed Day {day}
           {group ? ` of ${group.name}` : ""}.
         </p>
@@ -81,7 +81,7 @@ function CompleteContent() {
           animate={{ opacity: 1, y: 0 }}
           className="w-full max-w-sm"
         >
-          <p className="text-center text-gray-600 mb-4">How are you feeling?</p>
+          <p className="text-center text-dark font-medium mb-4">How are you feeling?</p>
           <div className="grid grid-cols-2 gap-3">
             {FEELINGS.map((f) => (
               <motion.button
@@ -89,7 +89,7 @@ function CompleteContent() {
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => handleFeeling(f.id)}
-                className="py-4 rounded-xl bg-white border-2 border-gray-200 font-medium text-dark hover:border-primary hover:bg-primary/5"
+                className="py-4 rounded-xl bg-white border-2 border-slate-300 font-medium text-dark hover:border-primary hover:bg-primary/5"
               >
                 <span className="text-2xl block mb-1">{f.emoji}</span>
                 {f.label}
@@ -103,7 +103,7 @@ function CompleteContent() {
           animate={{ opacity: 1 }}
           className="w-full max-w-sm text-center space-y-6"
         >
-          <p className="text-gray-600">
+          <p className="text-muted font-medium">
             Awesome. Rest up—tomorrow&apos;s routine is already waiting for you. Same time, same
             energy? 💪
           </p>

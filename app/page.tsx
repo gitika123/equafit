@@ -8,18 +8,19 @@ import { getRandomReminder } from "@/lib/reminders";
 import { ROUTINE_GROUPS, getGroupById } from "@/lib/routines";
 import { useEffect, useState } from "react";
 import { DietFuelPreview } from "@/components/home/DietFuelPreview";
+import { VibeSyncPreview } from "@/components/home/VibeSyncPreview";
 
 type ResumeTarget = { groupId: string; groupName: string; icon: string; nextDay: number } | null;
 
 const GRADIENTS: Record<string, string> = {
-  primary: "from-[#F4511E] to-[#FF8A65]",
+  primary: "from-[#d84315] to-[#FF8A65]",
   accent:  "from-[#00897B] to-[#00BCD4]",
   purple:  "from-[#7C3AED] to-[#A855F7]",
   blue:    "from-[#0EA5E9] to-[#6366F1]",
 };
 
 const GRADIENT_BG: Record<string, string> = {
-  primary: "linear-gradient(135deg,#F4511E,#FF8A65)",
+  primary: "linear-gradient(135deg,#d84315,#FF8A65)",
   accent:  "linear-gradient(135deg,#00897B,#00BCD4)",
   purple:  "linear-gradient(135deg,#7C3AED,#A855F7)",
   blue:    "linear-gradient(135deg,#0EA5E9,#6366F1)",
@@ -57,7 +58,7 @@ export default function HomePage() {
 
     let streak = 0;
     const today = new Date().toISOString().slice(0, 10);
-    const sorted = [...byDate].sort().reverse();
+    const sorted = Array.from(byDate).sort().reverse();
     for (const d of sorted) {
       const diff = Math.floor((new Date(today).getTime() - new Date(d).getTime()) / 86400000);
       if (diff === streak) streak++;
@@ -132,7 +133,7 @@ export default function HomePage() {
           >
             <div className="flex items-start justify-between mb-4">
               <span className="text-2xl">{s.icon}</span>
-              <span className="text-[11px] font-semibold text-muted bg-white/70 px-2.5 py-1 rounded-full">{s.sub}</span>
+              <span className="text-xs font-semibold text-muted bg-white/80 px-2.5 py-1 rounded-full">{s.sub}</span>
             </div>
             <p className={`text-4xl font-black leading-none ${s.val}`}>{s.value}</p>
             <p className="text-sm text-muted font-medium mt-2">{s.label}</p>
@@ -177,7 +178,7 @@ export default function HomePage() {
                   <div className="absolute bottom-0 left-0 w-16 h-16 bg-black/5 rounded-full translate-y-1/2 -translate-x-1/4" />
                   <span className="text-3xl mb-3 block relative">{group.icon}</span>
                   <p className="font-bold text-white text-sm relative">{group.name}</p>
-                  <p className="text-white/65 text-xs mt-1 relative">{group.durationMinutes} min · 30 days</p>
+                  <p className="text-white/90 text-xs mt-1 relative">{group.durationMinutes} min · 30 days</p>
                 </Link>
               </motion.div>
             ))}
@@ -232,7 +233,7 @@ export default function HomePage() {
             <Link href="/progress" className="card p-5 block group hover:shadow-card-md transition-shadow">
               <div className="flex items-center justify-between mb-4">
                 <p className="font-bold text-dark">Progress overview</p>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-slate-300 group-hover:text-primary transition-colors"><path d="M9 18l6-6-6-6" /></svg>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-slate-500 group-hover:text-primary transition-colors" aria-hidden><path d="M9 18l6-6-6-6" /></svg>
               </div>
               <div className="grid grid-cols-3 gap-2 text-center">
                 <div className="p-2 rounded-xl bg-primary/8">
@@ -269,6 +270,7 @@ export default function HomePage() {
       </div>
 
       <DietFuelPreview />
+      <VibeSyncPreview />
     </main>
   );
 }

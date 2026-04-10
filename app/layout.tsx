@@ -18,8 +18,8 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  themeColor: "#F4511E",
+  /** Omit maximumScale so pinch-zoom & browser font scaling are unrestricted (WCAG 1.4.4 / 1.4.10). */
+  themeColor: "#D84315",
 };
 
 export default function RootLayout({

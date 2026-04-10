@@ -26,10 +26,10 @@ module.exports = {
         card: "0 1px 3px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.04)",
         "card-md": "0 4px 12px rgba(0,0,0,0.08), 0 16px 40px rgba(0,0,0,0.06)",
         "card-lg": "0 8px 24px rgba(0,0,0,0.1), 0 24px 64px rgba(0,0,0,0.08)",
-        primary: "0 8px 32px rgba(244, 81, 30, 0.3)",
-        "primary-lg": "0 16px 48px rgba(244, 81, 30, 0.35)",
+        primary: "0 8px 32px rgba(216, 67, 21, 0.3)",
+        "primary-lg": "0 16px 48px rgba(216, 67, 21, 0.35)",
         accent: "0 8px 32px rgba(0, 137, 123, 0.25)",
-        fitness: "0 8px 32px rgba(244, 81, 30, 0.2)",
+        fitness: "0 8px 32px rgba(216, 67, 21, 0.2)",
       },
       keyframes: {
         "fade-in-up": {
@@ -49,8 +49,8 @@ module.exports = {
           "50%": { transform: "translateY(-6px)" },
         },
         "pulse-glow": {
-          "0%, 100%": { opacity: "1", boxShadow: "0 0 20px rgba(244, 81, 30, 0.3)" },
-          "50%": { opacity: "0.9", boxShadow: "0 0 40px rgba(244, 81, 30, 0.5)" },
+          "0%, 100%": { opacity: "1", boxShadow: "0 0 20px rgba(216, 67, 21, 0.3)" },
+          "50%": { opacity: "0.9", boxShadow: "0 0 40px rgba(216, 67, 21, 0.5)" },
         },
         shimmer: {
           "0%": { backgroundPosition: "-200% center" },
