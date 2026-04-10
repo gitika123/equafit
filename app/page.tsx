@@ -7,6 +7,7 @@ import { getCompletedDays, getProfile } from "@/lib/user-store";
 import { getRandomReminder } from "@/lib/reminders";
 import { ROUTINE_GROUPS, getGroupById } from "@/lib/routines";
 import { useEffect, useState } from "react";
+import { DietFuelPreview } from "@/components/home/DietFuelPreview";
 
 type ResumeTarget = { groupId: string; groupName: string; icon: string; nextDay: number } | null;
 
@@ -266,6 +267,8 @@ export default function HomePage() {
 
         </div>
       </div>
+
+      <DietFuelPreview />
     </main>
   );
 }

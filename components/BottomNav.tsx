@@ -53,11 +53,20 @@ function ProfileIcon({ active }: { active: boolean }) {
     </svg>
   );
 }
+function FuelIcon({ active }: { active: boolean }) {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={active ? 2.2 : 1.8} strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 3C10 3 8.5 5 8.5 8c0 3 1.5 5.5 3.5 6.5 2-1 3.5-3.5 3.5-6.5C15.5 5 14 3 12 3Z" />
+      <path d="M12 14.5V21" />
+    </svg>
+  );
+}
 
 const navItems = [
   { href: "/",          label: "Home",     Icon: HomeIcon },
   { href: "/routines",  label: "Routines", Icon: RoutinesIcon },
   { href: "/progress",  label: "Progress", Icon: ProgressIcon },
+  { href: "/diet-fuel", label: "Fuel",     Icon: FuelIcon },
   { href: "/period",    label: "Cycle",    Icon: CycleIcon },
   { href: "/reminders", label: "Remind",   Icon: BellIcon },
   { href: "/profile",   label: "Profile",  Icon: ProfileIcon },
@@ -142,14 +151,16 @@ export function BottomNav({ showBottomNav }: BottomNavProps) {
           className="md:hidden fixed bottom-0 left-0 right-0 z-50 safe-area-pb"
         >
           <div className="nav-glass border-t border-white/60" style={{ boxShadow: "0 -4px 24px rgba(0,0,0,0.06)" }}>
-            <div className="flex justify-around items-center h-16 px-2">
+            <div
+              className="flex items-center h-16 px-1 gap-0.5 overflow-x-auto overflow-y-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+            >
               {navItems.map(({ href, label, Icon }) => {
                 const active = isActive(href);
                 return (
                   <Link
                     key={href}
                     href={href}
-                    className="flex flex-col items-center flex-1 py-1.5 relative"
+                    className="flex flex-col items-center justify-center min-w-[3.35rem] flex-shrink-0 py-1.5 px-0.5 relative"
                   >
                     {active && (
                       <motion.div
