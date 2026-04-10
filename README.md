@@ -13,6 +13,7 @@ A **personalized, animated fitness & wellness app** for college students. Login,
 - **Period tracker** — Log start/end dates, see “on period” hint and quick link to period-friendly routine
 - **Progress** — Streak, longest streak, sessions done, days active, sessions-per-week bar chart (last 4 weeks)
 - **Profile** — View details, export/import backup (JSON), and log out
+- **Diet Fuel Guide** — Weekly, budget-friendly nutrition tips for students (not a personalized meal plan). Eight themes rotate by **calendar ISO week** (a new focus each week; the full set repeats after eight weeks). Data lives in `lib/diet-fuel-guide.ts`. **Home** shows a preview of the current week; the full guide is at **`/diet-fuel`** and in the sidebar / bottom nav under **Fuel**.
 
 ### High-impact additions
 
@@ -37,7 +38,7 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000). Sign up → complete onboarding → use Home, Routines, Progress, Cycle, Remind, Profile.
+Open [http://localhost:3000](http://localhost:3000). Sign up → complete onboarding → use Home, Routines, Progress, Fuel (Diet Fuel Guide), Cycle, Remind, Profile.
 
 ## Project structure
 
@@ -56,15 +57,19 @@ equafit/
 │   ├── progress/             # Streaks & stats
 │   ├── period/               # Period tracker + light routine link
 │   ├── reminders/            # Witty reminders on/off + preview
+│   ├── diet-fuel/            # Diet Fuel Guide (weekly budget tips)
 │   └── profile/              # Account & details
 ├── components/
 │   ├── AppShell.tsx          # Auth + nav visibility
-│   └── BottomNav.tsx         # Home, Routines, Progress, Cycle, Remind, Profile
+│   ├── BottomNav.tsx         # Home, Routines, Progress, Fuel, Cycle, Remind, Profile
+│   └── home/
+│       └── DietFuelPreview.tsx  # Home teaser → /diet-fuel
 ├── lib/
 │   ├── auth-context.tsx      # Auth state
 │   ├── user-store.ts         # localStorage (user, profile, completed, period, reminders)
 │   ├── routines.ts           # Groups + 30-day exercise data
-│   └── reminders.ts          # Witty reminder copy
+│   ├── reminders.ts          # Witty reminder copy
+│   └── diet-fuel-guide.ts    # Weekly themes + ISO week rotation
 └── ...
 ```
 
