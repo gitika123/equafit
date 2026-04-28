@@ -2,11 +2,21 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import { getCurrentDietFuelWeek, getISOWeekNumber } from "@/lib/diet-fuel-guide";
 
 export function DietFuelPreview() {
-  const week = getCurrentDietFuelWeek();
-  const iso = getISOWeekNumber();
+  const [today, setToday] = useState<Date | null>(null);
+  useEffect(() => {
+    setToday(new Date());
+  }, []);
+
+  if (!today) {
+    return null;
+  }
+
+  const week = getCurrentDietFuelWeek(today);
+  const iso = getISOWeekNumber(today);
 
   return (
     <motion.section

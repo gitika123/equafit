@@ -14,11 +14,13 @@ export default function LoginPage() {
   const router = useRouter();
   const { login } = useAuth();
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
     if (!email.trim()) { setError("Please enter your email"); return; }
-    login(email.trim(), password, name.trim() || email.split("@")[0]);
+    if (!password.trim()) { setError("Please enter your password"); return; }
+    const result = await login(email.trim(), password, name.trim() || email.split("@")[0]);
+    if (result.error) { setError(result.error); return; }
     router.push("/onboarding");
   }
 

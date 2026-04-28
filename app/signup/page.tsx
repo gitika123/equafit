@@ -14,12 +14,13 @@ export default function SignupPage() {
   const router = useRouter();
   const { signup } = useAuth();
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
     if (!email.trim()) { setError("Please enter your email"); return; }
     if (password.length < 4) { setError("Password must be at least 4 characters"); return; }
-    signup(email.trim(), password, name.trim() || email.split("@")[0]);
+    const result = await signup(email.trim(), password, name.trim() || email.split("@")[0]);
+    if (result.error) { setError(result.error); return; }
     router.push("/onboarding");
   }
 

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import {
   DIET_FUEL_WEEKS,
   getCurrentDietFuelWeek,
@@ -67,7 +68,15 @@ function WeekCard({
 }
 
 export default function DietFuelPage() {
-  const today = new Date();
+  const [today, setToday] = useState<Date | null>(null);
+  useEffect(() => {
+    setToday(new Date());
+  }, []);
+
+  if (!today) {
+    return null;
+  }
+
   const isoWeek = getISOWeekNumber(today);
   const current = getCurrentDietFuelWeek(today);
   const currentIndex = DIET_FUEL_WEEKS.findIndex((w) => w.id === current.id);

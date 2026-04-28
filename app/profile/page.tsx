@@ -130,7 +130,7 @@ export default function ProfilePage() {
     const updated: UserProfile = { ...profile, weightKg: kg };
     saveProfile(updated); setProfile(updated); setEditingWeight(false);
   }
-  function handleLogout() { logout(); router.replace("/login"); }
+  async function handleLogout() { await logout(); router.replace("/login"); }
 
   const TABS = [
     { id: "overview" as const, icon: "📊", label: "Overview" },

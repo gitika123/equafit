@@ -1,3 +1,5 @@
+import { supabase } from "@/lib/supabase";
+
 const STORAGE_KEYS = {
   user: "equafit_user",
   profile: "equafit_profile",
@@ -56,6 +58,21 @@ export function getStoredUser(): StoredUser | null {
   return raw ? JSON.parse(raw) : null;
 }
 
+function scopedKey(key: string): string {
+  if (typeof window === "undefined") return key;
+  const user = getStoredUser();
+  return user ? `${key}__${user.id}` : key;
+}
+
+function getCurrentUserId(): string | null {
+  return getStoredUser()?.id ?? null;
+}
+
+function saveScopedJson<T>(key: string, value: T): void {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(scopedKey(key), JSON.stringify(value));
+}
+
 export function setStoredUser(user: StoredUser | null): void {
   if (typeof window === "undefined") return;
   if (user) localStorage.setItem(STORAGE_KEYS.user, JSON.stringify(user));
@@ -64,28 +81,39 @@ export function setStoredUser(user: StoredUser | null): void {
 
 export function isOnboardingDone(): boolean {
   if (typeof window === "undefined") return false;
-  return localStorage.getItem(STORAGE_KEYS.onboardingDone) === "true";
+  return localStorage.getItem(scopedKey(STORAGE_KEYS.onboardingDone)) === "true";
 }
 
 export function setOnboardingDone(): void {
   if (typeof window === "undefined") return;
-  localStorage.setItem(STORAGE_KEYS.onboardingDone, "true");
+  localStorage.setItem(scopedKey(STORAGE_KEYS.onboardingDone), "true");
 }
 
 export function getProfile(): UserProfile | null {
   if (typeof window === "undefined") return null;
-  const raw = localStorage.getItem(STORAGE_KEYS.profile);
+  const raw = localStorage.getItem(scopedKey(STORAGE_KEYS.profile));
   return raw ? JSON.parse(raw) : null;
 }
 
 export function setProfile(profile: UserProfile): void {
   if (typeof window === "undefined") return;
-  localStorage.setItem(STORAGE_KEYS.profile, JSON.stringify(profile));
+  saveScopedJson(STORAGE_KEYS.profile, profile);
+  const userId = getCurrentUserId();
+  if (!supabase || !userId) return;
+  void supabase.from("profiles").upsert({
+    user_id: userId,
+    height_cm: profile.heightCm,
+    weight_kg: profile.weightKg,
+    age: profile.age,
+    gender: profile.gender,
+    goals: profile.goals,
+    period_tracking_enabled: profile.periodTrackingEnabled,
+  });
 }
 
 export function getCompletedDays(): CompletedDay[] {
   if (typeof window === "undefined") return [];
-  const raw = localStorage.getItem(STORAGE_KEYS.completedDays);
+  const raw = localStorage.getItem(scopedKey(STORAGE_KEYS.completedDays));
   return raw ? JSON.parse(raw) : [];
 }
 
@@ -94,13 +122,23 @@ export function addCompletedDay(day: CompletedDay): void {
   const exists = list.some((d) => d.groupId === day.groupId && d.day === day.day && d.date === day.date);
   if (!exists) {
     list.push(day);
-    localStorage.setItem(STORAGE_KEYS.completedDays, JSON.stringify(list));
+    saveScopedJson(STORAGE_KEYS.completedDays, list);
+    const userId = getCurrentUserId();
+    if (supabase && userId) {
+      void supabase.from("completed_days").upsert({
+        user_id: userId,
+        group_id: day.groupId,
+        day: day.day,
+        date: day.date,
+        feeling: day.feeling ?? null,
+      });
+    }
   }
 }
 
 export function getPeriodLog(): PeriodEntry[] {
   if (typeof window === "undefined") return [];
-  const raw = localStorage.getItem(STORAGE_KEYS.periodLog);
+  const raw = localStorage.getItem(scopedKey(STORAGE_KEYS.periodLog));
   return raw ? JSON.parse(raw) : [];
 }
 
@@ -108,25 +146,43 @@ export function addPeriodEntry(entry: PeriodEntry): void {
   const list = getPeriodLog();
   list.push(entry);
   list.sort((a, b) => a.startDate.localeCompare(b.startDate));
-  localStorage.setItem(STORAGE_KEYS.periodLog, JSON.stringify(list));
+  saveScopedJson(STORAGE_KEYS.periodLog, list);
+  const userId = getCurrentUserId();
+  if (!supabase || !userId) return;
+  void supabase.from("period_entries").insert({
+    user_id: userId,
+    start_date: entry.startDate,
+    end_date: entry.endDate,
+    notes: entry.notes ?? null,
+    flow: entry.flow ?? null,
+    symptoms: entry.symptoms ?? [],
+  });
 }
 
 export function getReminderSettings(): ReminderSettings {
   if (typeof window === "undefined")
     return { enabled: false, time: "09:00", messages: [] };
-  const raw = localStorage.getItem(STORAGE_KEYS.reminders);
+  const raw = localStorage.getItem(scopedKey(STORAGE_KEYS.reminders));
   if (!raw) return { enabled: false, time: "09:00", messages: [] };
   return JSON.parse(raw);
 }
 
 export function setReminderSettings(settings: ReminderSettings): void {
   if (typeof window === "undefined") return;
-  localStorage.setItem(STORAGE_KEYS.reminders, JSON.stringify(settings));
+  saveScopedJson(STORAGE_KEYS.reminders, settings);
+  const userId = getCurrentUserId();
+  if (!supabase || !userId) return;
+  void supabase.from("reminder_settings").upsert({
+    user_id: userId,
+    enabled: settings.enabled,
+    time: settings.time,
+    messages: settings.messages,
+  });
 }
 
 export function getWeightLog(): WeightEntry[] {
   if (typeof window === "undefined") return [];
-  const raw = localStorage.getItem(STORAGE_KEYS.weightLog);
+  const raw = localStorage.getItem(scopedKey(STORAGE_KEYS.weightLog));
   return raw ? JSON.parse(raw) : [];
 }
 
@@ -136,8 +192,63 @@ export function addWeightEntry(entry: WeightEntry): void {
   if (idx >= 0) list[idx] = entry;
   else list.push(entry);
   list.sort((a, b) => a.date.localeCompare(b.date));
-  localStorage.setItem(STORAGE_KEYS.weightLog, JSON.stringify(list));
+  saveScopedJson(STORAGE_KEYS.weightLog, list);
 }
+
+export async function syncUserDataFromCloud(): Promise<void> {
+  const userId = getCurrentUserId();
+  if (typeof window === "undefined" || !supabase || !userId) return;
+
+  const [profileRes, completedRes, periodRes, reminderRes] = await Promise.all([
+    supabase.from("profiles").select("*").eq("user_id", userId).maybeSingle(),
+    supabase.from("completed_days").select("*").eq("user_id", userId).order("date", { ascending: true }),
+    supabase.from("period_entries").select("*").eq("user_id", userId).order("start_date", { ascending: true }),
+    supabase.from("reminder_settings").select("*").eq("user_id", userId).maybeSingle(),
+  ]);
+
+  if (profileRes.data) {
+    const profile: UserProfile = {
+      heightCm: Number(profileRes.data.height_cm ?? 165),
+      weightKg: Number(profileRes.data.weight_kg ?? 60),
+      age: Number(profileRes.data.age ?? 22),
+      gender: (profileRes.data.gender as UserProfile["gender"]) ?? "female",
+      goals: (profileRes.data.goals as string[] | null) ?? [],
+      periodTrackingEnabled: Boolean(profileRes.data.period_tracking_enabled),
+    };
+    saveScopedJson(STORAGE_KEYS.profile, profile);
+  }
+
+  if (completedRes.data) {
+    const completed: CompletedDay[] = completedRes.data.map((r) => ({
+      groupId: r.group_id as string,
+      day: Number(r.day),
+      date: r.date as string,
+      feeling: (r.feeling as CompletedDay["feeling"] | null) ?? undefined,
+    }));
+    saveScopedJson(STORAGE_KEYS.completedDays, completed);
+  }
+
+  if (periodRes.data) {
+    const periodLog: PeriodEntry[] = periodRes.data.map((r) => ({
+      startDate: r.start_date as string,
+      endDate: r.end_date as string,
+      notes: (r.notes as string | null) ?? undefined,
+      flow: (r.flow as PeriodEntry["flow"] | null) ?? undefined,
+      symptoms: (r.symptoms as string[] | null) ?? undefined,
+    }));
+    saveScopedJson(STORAGE_KEYS.periodLog, periodLog);
+  }
+
+  if (reminderRes.data) {
+    const reminders: ReminderSettings = {
+      enabled: Boolean(reminderRes.data.enabled),
+      time: (reminderRes.data.time as string) || "09:00",
+      messages: (reminderRes.data.messages as string[] | null) ?? [],
+    };
+    saveScopedJson(STORAGE_KEYS.reminders, reminders);
+  }
+}
+
 
 export const STORAGE_KEYS_ARR = [
   STORAGE_KEYS.user,
@@ -191,7 +302,8 @@ export function exportAllData(): ExportedData {
   if (typeof window === "undefined") return {};
   const out: ExportedData = {};
   STORAGE_KEYS_ARR.forEach((key) => {
-    out[key] = localStorage.getItem(key);
+    const actualKey = key === STORAGE_KEYS.user ? key : scopedKey(key);
+    out[key] = localStorage.getItem(actualKey);
   });
   return out;
 }
@@ -200,6 +312,7 @@ export function importAllData(data: ExportedData): void {
   if (typeof window === "undefined") return;
   STORAGE_KEYS_ARR.forEach((key) => {
     const v = data[key];
-    if (v !== undefined && v !== null) localStorage.setItem(key, v);
+    const actualKey = key === STORAGE_KEYS.user ? key : scopedKey(key);
+    if (v !== undefined && v !== null) localStorage.setItem(actualKey, v);
   });
 }

@@ -40,6 +40,15 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000). Sign up → complete onboarding → use Home, Routines, Progress, Fuel (Diet Fuel Guide), Cycle, Remind, Profile.
 
+### Auth + DB setup (Supabase)
+
+1. Copy env template and add your project keys:
+   - `cp .env.example .env.local`
+   - Fill `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+2. In Supabase SQL editor, run:
+   - `supabase/migrations/001_init_equafit.sql`
+3. Enable email/password auth in Supabase Auth settings.
+
 ## Project structure
 
 ```
