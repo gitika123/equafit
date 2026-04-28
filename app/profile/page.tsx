@@ -83,7 +83,14 @@ export default function ProfilePage() {
   const [periodCount, setPeriodCount] = useState(0);
   const [importMessage, setImportMessage] = useState<"success" | "error" | null>(null);
   const [editingWeight, setEditingWeight] = useState(false);
+  const [editingProfile, setEditingProfile] = useState(false);
   const [weightDraft, setWeightDraft] = useState("");
+  const [profileDraft, setProfileDraft] = useState<{ heightCm: string; age: string; gender: UserProfile["gender"]; periodTrackingEnabled: boolean }>({
+    heightCm: "",
+    age: "",
+    gender: "female",
+    periodTrackingEnabled: false,
+  });
   const [tab, setTab] = useState<"overview" | "achievements" | "data">("overview");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -137,6 +144,37 @@ export default function ProfilePage() {
     saveProfile(updated);
     setProfile(updated);
     setEditingWeight(false);
+    refresh();
+  }
+  function startProfileEdit() {
+    if (!profile) return;
+    setProfileDraft({
+      heightCm: String(profile.heightCm),
+      age: String(profile.age),
+      gender: profile.gender,
+      periodTrackingEnabled: profile.periodTrackingEnabled,
+    });
+    setEditingProfile(true);
+  }
+  function cancelProfileEdit() {
+    setEditingProfile(false);
+  }
+  function saveProfileEdits() {
+    if (!profile) return;
+    const heightCm = Number(profileDraft.heightCm);
+    const age = Number(profileDraft.age);
+    if (!Number.isFinite(heightCm) || heightCm < 100 || heightCm > 250) return;
+    if (!Number.isFinite(age) || age < 13 || age > 100) return;
+    const updated: UserProfile = {
+      ...profile,
+      heightCm,
+      age,
+      gender: profileDraft.gender,
+      periodTrackingEnabled: profileDraft.gender === "male" ? false : profileDraft.periodTrackingEnabled,
+    };
+    saveProfile(updated);
+    setProfile(updated);
+    setEditingProfile(false);
     refresh();
   }
   async function handleLogout() { await logout(); router.replace("/login"); }
@@ -278,33 +316,114 @@ export default function ProfilePage() {
                   {/* Body stats */}
                   {profile && (
                     <div className="card p-6">
-                      <h3 className="font-black text-dark mb-4">Body stats</h3>
-                      <div className="grid grid-cols-3 gap-4">
-                        <div className="p-4 rounded-2xl bg-orange-50 text-center">
-                          <p className="text-3xl font-black text-primary">{profile.heightCm}</p>
-                          <p className="text-xs text-muted mt-1">cm height</p>
-                        </div>
-                        <div className="p-4 rounded-2xl bg-blue-50 text-center">
-                          {editingWeight ? (
-                            <div className="flex flex-col gap-2">
-                              <input autoFocus type="number" value={weightDraft}
-                                onChange={(e) => setWeightDraft(e.target.value)}
-                                onKeyDown={(e) => e.key === "Enter" && handleSaveWeight()}
-                                className="w-full text-center text-sm border border-blue-200 rounded-lg px-2 py-1.5" />
-                              <button onClick={handleSaveWeight} className="text-xs text-blue-600 font-bold">Save ✓</button>
-                            </div>
-                          ) : (
-                            <button onClick={() => { setEditingWeight(true); setWeightDraft(String(profile.weightKg)); }} className="w-full">
-                              <p className="text-3xl font-black text-blue-600">{profile.weightKg}</p>
-                              <p className="text-xs text-muted mt-1">kg ✏️</p>
-                            </button>
-                          )}
-                        </div>
-                        <div className="p-4 rounded-2xl bg-teal-50 text-center">
-                          <p className="text-3xl font-black text-teal-600">{profile.age}</p>
-                          <p className="text-xs text-muted mt-1">years old</p>
-                        </div>
+                      <div className="flex items-center justify-between mb-4">
+                        <h3 className="font-black text-dark">Body stats</h3>
+                        {!editingProfile && (
+                          <button
+                            type="button"
+                            onClick={startProfileEdit}
+                            className="text-xs font-bold text-primary hover:underline underline-offset-2"
+                          >
+                            Edit profile
+                          </button>
+                        )}
                       </div>
+                      {editingProfile ? (
+                        <div className="space-y-4">
+                          <div className="grid grid-cols-2 gap-3">
+                            <div>
+                              <label className="block text-xs font-bold text-muted uppercase tracking-widest mb-1.5">Height (cm)</label>
+                              <input
+                                type="number"
+                                min={100}
+                                max={250}
+                                value={profileDraft.heightCm}
+                                onChange={(e) => setProfileDraft((d) => ({ ...d, heightCm: e.target.value }))}
+                                className="input-base"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-xs font-bold text-muted uppercase tracking-widest mb-1.5">Age</label>
+                              <input
+                                type="number"
+                                min={13}
+                                max={100}
+                                value={profileDraft.age}
+                                onChange={(e) => setProfileDraft((d) => ({ ...d, age: e.target.value }))}
+                                className="input-base"
+                              />
+                            </div>
+                          </div>
+                          <div>
+                            <label className="block text-xs font-bold text-muted uppercase tracking-widest mb-2">Gender</label>
+                            <div className="grid grid-cols-3 gap-2">
+                              {(["female", "male", "other"] as const).map((g) => (
+                                <button
+                                  key={g}
+                                  type="button"
+                                  onClick={() =>
+                                    setProfileDraft((d) => ({
+                                      ...d,
+                                      gender: g,
+                                      periodTrackingEnabled: g === "male" ? false : d.periodTrackingEnabled,
+                                    }))
+                                  }
+                                  className={`py-2.5 rounded-xl font-semibold text-sm capitalize transition-all ${
+                                    profileDraft.gender === g ? "bg-gradient-fitness text-white shadow-primary" : "bg-slate-100 text-dark"
+                                  }`}
+                                >
+                                  {g}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                          {profileDraft.gender !== "male" && (
+                            <label className="flex items-center justify-between p-3 rounded-xl bg-rose-50 border border-rose-100">
+                              <span className="text-sm font-semibold text-dark">Enable period tracking</span>
+                              <input
+                                type="checkbox"
+                                checked={profileDraft.periodTrackingEnabled}
+                                onChange={(e) => setProfileDraft((d) => ({ ...d, periodTrackingEnabled: e.target.checked }))}
+                              />
+                            </label>
+                          )}
+                          <div className="flex gap-2 justify-end">
+                            <button type="button" onClick={cancelProfileEdit} className="px-4 py-2 rounded-xl text-sm font-semibold bg-slate-100 text-dark">
+                              Cancel
+                            </button>
+                            <button type="button" onClick={saveProfileEdits} className="px-4 py-2 rounded-xl text-sm font-bold bg-gradient-fitness text-white">
+                              Save changes
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="grid grid-cols-3 gap-4">
+                          <div className="p-4 rounded-2xl bg-orange-50 text-center">
+                            <p className="text-3xl font-black text-primary">{profile.heightCm}</p>
+                            <p className="text-xs text-muted mt-1">cm height</p>
+                          </div>
+                          <div className="p-4 rounded-2xl bg-blue-50 text-center">
+                            {editingWeight ? (
+                              <div className="flex flex-col gap-2">
+                                <input autoFocus type="number" value={weightDraft}
+                                  onChange={(e) => setWeightDraft(e.target.value)}
+                                  onKeyDown={(e) => e.key === "Enter" && handleSaveWeight()}
+                                  className="w-full text-center text-sm border border-blue-200 rounded-lg px-2 py-1.5" />
+                                <button onClick={handleSaveWeight} className="text-xs text-blue-600 font-bold">Save ✓</button>
+                              </div>
+                            ) : (
+                              <button onClick={() => { setEditingWeight(true); setWeightDraft(String(profile.weightKg)); }} className="w-full">
+                                <p className="text-3xl font-black text-blue-600">{profile.weightKg}</p>
+                                <p className="text-xs text-muted mt-1">kg ✏️</p>
+                              </button>
+                            )}
+                          </div>
+                          <div className="p-4 rounded-2xl bg-teal-50 text-center">
+                            <p className="text-3xl font-black text-teal-600">{profile.age}</p>
+                            <p className="text-xs text-muted mt-1">years old</p>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   )}
 
