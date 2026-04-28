@@ -22,7 +22,7 @@ type AuthState = {
 };
 
 type AuthContextValue = AuthState & {
-  login: (email: string, password: string, name: string) => Promise<{ error?: string }>;
+  login: (email: string, password: string) => Promise<{ error?: string }>;
   signup: (email: string, password: string, name: string) => Promise<{ error?: string }>;
   logout: () => Promise<void>;
   setProfileData: (profile: UserProfile) => void;
@@ -90,7 +90,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     void init();
   }, []);
 
-  async function login(email: string, password: string, name: string) {
+  async function login(email: string, password: string) {
     if (!isSupabaseConfigured || !supabase) {
       return { error: "Supabase is not configured. Add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY." };
     }
@@ -101,7 +101,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setStoredUser({
       id: data.user.id,
       email: data.user.email ?? email,
-      name: ((data.user.user_metadata?.name as string | undefined) ?? name) || email.split("@")[0],
+      name: (data.user.user_metadata?.name as string | undefined) ?? email.split("@")[0],
       createdAt: data.user.created_at ?? new Date().toISOString(),
     });
     await syncUserDataFromCloud();

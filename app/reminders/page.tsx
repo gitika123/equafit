@@ -10,15 +10,21 @@ export default function RemindersPage() {
   const [settings, setSettings] = useState<ReminderSettings>({ enabled: false, time: "09:00", messages: [] });
   const [preview, setPreview] = useState("");
   const [saved, setSaved] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
+  const [notifPermission, setNotifPermission] = useState<NotificationPermission>(
+    typeof window !== "undefined" && "Notification" in window ? Notification.permission : "default"
+  );
 
   useEffect(() => {
     setSettings(getReminderSettings());
     setPreview(getRandomReminder());
+    setHydrated(true);
   }, []);
 
   useEffect(() => {
+    if (!hydrated) return;
     setReminderSettings(settings);
-  }, [settings]);
+  }, [settings, hydrated]);
 
   function toggleEnabled() {
     setSettings((s) => ({ ...s, enabled: !s.enabled }));
@@ -27,6 +33,12 @@ export default function RemindersPage() {
   }
 
   function shufflePreview() { setPreview(getRandomReminder()); }
+
+  async function enableBrowserNotifications() {
+    if (typeof window === "undefined" || !("Notification" in window)) return;
+    const permission = await Notification.requestPermission();
+    setNotifPermission(permission);
+  }
 
   return (
     <main className="w-full px-4 sm:px-6 lg:px-10 pt-6 pb-28 md:pb-10 min-h-screen">
@@ -99,6 +111,20 @@ export default function RemindersPage() {
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
             className="card p-6 bg-gradient-to-br from-amber-50 to-orange-50 border-amber-100">
             <h3 className="font-black text-dark mb-4">How reminders work</h3>
+            {notifPermission !== "granted" && (
+              <div className="mb-4 p-3 rounded-xl bg-white border border-amber-200">
+                <p className="text-xs text-muted mb-2">
+                  Browser notifications are currently blocked, so pop-up reminders cannot appear.
+                </p>
+                <button
+                  type="button"
+                  onClick={enableBrowserNotifications}
+                  className="text-xs font-bold text-primary hover:underline underline-offset-2"
+                >
+                  Enable browser notifications
+                </button>
+              </div>
+            )}
             <div className="space-y-3">
               {[
                 { icon: "🎲", title: "Random each day", desc: "A different witty message every time — no repetition." },

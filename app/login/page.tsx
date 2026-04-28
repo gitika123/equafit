@@ -9,7 +9,6 @@ import { useAuth } from "@/lib/auth-context";
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
   const { login } = useAuth();
@@ -19,7 +18,7 @@ export default function LoginPage() {
     setError("");
     if (!email.trim()) { setError("Please enter your email"); return; }
     if (!password.trim()) { setError("Please enter your password"); return; }
-    const result = await login(email.trim(), password, name.trim() || email.split("@")[0]);
+    const result = await login(email.trim(), password);
     if (result.error) { setError(result.error); return; }
     router.push("/onboarding");
   }
@@ -69,16 +68,6 @@ export default function LoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@example.com"
-                  className="input-base"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-muted uppercase tracking-widest mb-1.5">Name (optional)</label>
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="What should we call you?"
                   className="input-base"
                 />
               </div>
