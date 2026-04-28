@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
+import { useAuth } from "@/lib/auth-context";
 
 /* ── SVG Icons ── */
 function HomeIcon({ active }: { active: boolean }) {
@@ -89,6 +90,11 @@ interface BottomNavProps {
 
 export function BottomNav({ showBottomNav }: BottomNavProps) {
   const pathname = usePathname();
+  const { profile } = useAuth();
+  const showCycle = profile?.gender !== "male";
+  const visibleNavItems = showCycle
+    ? navItems
+    : navItems.filter((item) => item.href !== "/period");
 
   const isActive = (href: string) =>
     pathname === href || (href !== "/" && pathname.startsWith(href));
@@ -118,7 +124,7 @@ export function BottomNav({ showBottomNav }: BottomNavProps) {
 
         {/* Nav items */}
         <nav className="flex-1 px-3 py-4 space-y-1">
-          {navItems.map(({ href, label, Icon }) => {
+          {visibleNavItems.map(({ href, label, Icon }) => {
             const active = isActive(href);
             return (
               <Link
@@ -164,7 +170,7 @@ export function BottomNav({ showBottomNav }: BottomNavProps) {
             <div
               className="flex items-center h-16 px-1 gap-0.5 overflow-x-auto overflow-y-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
             >
-              {navItems.map(({ href, label, Icon }) => {
+              {visibleNavItems.map(({ href, label, Icon }) => {
                 const active = isActive(href);
                 return (
                   <Link

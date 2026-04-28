@@ -75,7 +75,7 @@ function goalLabel(g: string) {
 
 /* ── Main page ── */
 export default function ProfilePage() {
-  const { user, logout } = useAuth();
+  const { user, logout, refresh } = useAuth();
   const router = useRouter();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [sessions, setSessions] = useState(0);
@@ -87,7 +87,7 @@ export default function ProfilePage() {
   const [tab, setTab] = useState<"overview" | "achievements" | "data">("overview");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
+  function hydrateFromStorage() {
     const p = getProfile();
     setProfile(p);
     const completed = getCompletedDays();
@@ -95,6 +95,10 @@ export default function ProfilePage() {
     const { longestStreak: ls } = getProgressStats(completed);
     setLongestStreak(ls);
     setPeriodCount(getPeriodLog().length);
+  }
+
+  useEffect(() => {
+    hydrateFromStorage();
   }, []);
 
   const bmi = profile ? profile.weightKg / Math.pow(profile.heightCm / 100, 2) : null;
@@ -117,7 +121,9 @@ export default function ProfilePage() {
     reader.onload = () => {
       try {
         importAllData(JSON.parse(reader.result as string) as ExportedData);
-        setImportMessage("success"); setProfile(getProfile());
+        setImportMessage("success");
+        hydrateFromStorage();
+        refresh();
         if (fileInputRef.current) fileInputRef.current.value = "";
         setTimeout(() => setImportMessage(null), 3000);
       } catch { setImportMessage("error"); }
@@ -128,7 +134,10 @@ export default function ProfilePage() {
     const kg = parseFloat(weightDraft);
     if (!profile || isNaN(kg) || kg <= 0) return;
     const updated: UserProfile = { ...profile, weightKg: kg };
-    saveProfile(updated); setProfile(updated); setEditingWeight(false);
+    saveProfile(updated);
+    setProfile(updated);
+    setEditingWeight(false);
+    refresh();
   }
   async function handleLogout() { await logout(); router.replace("/login"); }
 

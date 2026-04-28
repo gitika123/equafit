@@ -31,6 +31,7 @@ export default function OnboardingPage() {
   });
   const router = useRouter();
   const { setProfileData, setOnboardingDone } = useAuth();
+  const isMale = profile.gender === "male";
 
   function next() {
     if (step < 3) { setStep(step + 1); return; }
@@ -124,7 +125,14 @@ export default function OnboardingPage() {
                       <button
                         key={g}
                         type="button"
-                        onClick={() => setProfile({ ...profile, gender: g })}
+                        onClick={() =>
+                          setProfile({
+                            ...profile,
+                            gender: g,
+                            // Enforce period tracking off for male profiles.
+                            periodTrackingEnabled: g === "male" ? false : profile.periodTrackingEnabled,
+                          })
+                        }
                         className={`py-3 rounded-xl font-semibold text-sm capitalize transition-all ${
                           profile.gender === g
                             ? "bg-gradient-fitness text-white shadow-primary"
@@ -182,32 +190,46 @@ export default function OnboardingPage() {
               transition={{ duration: 0.3 }}
               className="flex-1"
             >
-              <motion.button
-                type="button"
-                whileTap={{ scale: 0.98 }}
-                onClick={() => setProfile({ ...profile, periodTrackingEnabled: !profile.periodTrackingEnabled })}
-                className={`w-full p-6 rounded-3xl text-left border-2 transition-all ${
-                  profile.periodTrackingEnabled
-                    ? "border-rose-300 bg-rose-50"
-                    : "border-transparent bg-white shadow-card"
-                }`}
-              >
-                <div className="flex items-start gap-4">
-                  <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-2xl ${
-                    profile.periodTrackingEnabled ? "bg-rose-100" : "bg-slate-100"
-                  }`}>
-                    🌸
-                  </div>
-                  <div className="flex-1">
-                    <p className={`font-bold text-lg ${profile.periodTrackingEnabled ? "text-rose-700" : "text-dark"}`}>
-                      {profile.periodTrackingEnabled ? "Period tracking ON ✓" : "Enable period tracking"}
-                    </p>
-                    <p className="text-sm text-muted mt-1 leading-relaxed">
-                      Track your cycle and get gentle, period-friendly routines automatically during high-fatigue days.
-                    </p>
+              {isMale ? (
+                <div className="w-full p-6 rounded-3xl text-left border-2 border-slate-200 bg-slate-50">
+                  <div className="flex items-start gap-4">
+                    <div className="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center text-2xl">🚫</div>
+                    <div className="flex-1">
+                      <p className="font-bold text-lg text-dark">Cycle tracking not applicable</p>
+                      <p className="text-sm text-muted mt-1 leading-relaxed">
+                        This feature is disabled for male profiles. You can still use all workouts, progress, reminders, and diet guide features.
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </motion.button>
+              ) : (
+                <motion.button
+                  type="button"
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => setProfile({ ...profile, periodTrackingEnabled: !profile.periodTrackingEnabled })}
+                  className={`w-full p-6 rounded-3xl text-left border-2 transition-all ${
+                    profile.periodTrackingEnabled
+                      ? "border-rose-300 bg-rose-50"
+                      : "border-transparent bg-white shadow-card"
+                  }`}
+                >
+                  <div className="flex items-start gap-4">
+                    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-2xl ${
+                      profile.periodTrackingEnabled ? "bg-rose-100" : "bg-slate-100"
+                    }`}>
+                      🌸
+                    </div>
+                    <div className="flex-1">
+                      <p className={`font-bold text-lg ${profile.periodTrackingEnabled ? "text-rose-700" : "text-dark"}`}>
+                        {profile.periodTrackingEnabled ? "Period tracking ON ✓" : "Enable period tracking"}
+                      </p>
+                      <p className="text-sm text-muted mt-1 leading-relaxed">
+                        Track your cycle and get gentle, period-friendly routines automatically during high-fatigue days.
+                      </p>
+                    </div>
+                  </div>
+                </motion.button>
+              )}
 
               <div className="mt-4 p-4 rounded-2xl bg-amber-50 border border-amber-100">
                 <p className="text-xs text-amber-700 font-medium leading-relaxed">

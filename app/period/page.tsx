@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { getPeriodLog, addPeriodEntry, type PeriodEntry } from "@/lib/user-store";
+import { getPeriodLog, addPeriodEntry, getProfile, type PeriodEntry } from "@/lib/user-store";
 
 const PHASES = [
   { id: "menstrual",  label: "Menstrual",  days: "Days 1–5",   icon: "🩸", color: "bg-rose-500",   light: "bg-rose-50",   border: "border-rose-200",   text: "text-rose-600",   tip: "Rest, warmth, and gentle movement. Your body is doing important work." },
@@ -32,6 +32,8 @@ function getCycleInfo(log: PeriodEntry[]) {
 }
 
 export default function PeriodPage() {
+  const profile = getProfile();
+  const isBlockedForProfile = profile?.gender === "male";
   const [log, setLog] = useState<PeriodEntry[]>([]);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -40,6 +42,23 @@ export default function PeriodPage() {
   const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>([]);
 
   useEffect(() => { setLog(getPeriodLog()); }, []);
+
+  if (isBlockedForProfile) {
+    return (
+      <main className="w-full px-4 sm:px-6 lg:px-10 pt-6 pb-28 md:pb-10 min-h-screen">
+        <div className="card p-8 text-center max-w-xl mx-auto mt-8">
+          <p className="text-5xl mb-3">🚫</p>
+          <h1 className="text-2xl font-black text-dark mb-2">Cycle Tracker not available</h1>
+          <p className="text-sm text-muted mb-5">
+            This feature is disabled for male profiles. You can continue using routines, progress tracking, reminders, and the diet guide.
+          </p>
+          <Link href="/" className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-fitness text-white font-bold text-sm">
+            Back to Home
+          </Link>
+        </div>
+      </main>
+    );
+  }
 
   const cycleInfo = useMemo(() => getCycleInfo(log), [log]);
   const currentPhase = PHASES.find((p) => p.id === cycleInfo?.phaseId) ?? PHASES[1];
