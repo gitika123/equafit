@@ -4,7 +4,7 @@ A **personalized, animated fitness & wellness app** for college students. Login,
 
 ## Features
 
-- **Login / Sign up** — Simple auth (client-side for demo)
+- **Login / Sign up** — Supabase email/password auth
 - **Onboarding** — Height, weight, age, gender, goals, optional period tracking
 - **Routine groups** — Belly & abs, Arms, Legs, Full body, Cardio, Flexibility, Stress relief, **Period-friendly (light)**
 - **30-day routines** — Each group has a 30-day program; tap a day to see exercises, watch video tutorials (YouTube), and mark complete
@@ -45,9 +45,13 @@ Open [http://localhost:3000](http://localhost:3000). Sign up → complete onboar
 1. Copy env template and add your project keys:
    - `cp .env.example .env.local`
    - Fill `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - `NEXT_PUBLIC_SUPABASE_URL` format must be `https://<project-ref>.supabase.co` (do **not** use `/rest/v1/`)
 2. In Supabase SQL editor, run:
    - `supabase/migrations/001_init_equafit.sql`
 3. Enable email/password auth in Supabase Auth settings.
+4. If login shows **Email not confirmed**, either:
+   - confirm the verification email, or
+   - disable confirmation for development in `Authentication -> Providers -> Email`.
 
 ## Project structure
 
@@ -74,11 +78,15 @@ equafit/
 │   └── home/
 │       └── DietFuelPreview.tsx  # Home teaser → /diet-fuel
 ├── lib/
-│   ├── auth-context.tsx      # Auth state
-│   ├── user-store.ts         # localStorage (user, profile, completed, period, reminders)
+│   ├── auth-context.tsx      # Supabase auth + session state
+│   ├── supabase.ts           # Supabase client
+│   ├── user-store.ts         # local cache + per-user sync helpers
 │   ├── routines.ts           # Groups + 30-day exercise data
 │   ├── reminders.ts          # Witty reminder copy
 │   └── diet-fuel-guide.ts    # Weekly themes + ISO week rotation
+├── supabase/
+│   └── migrations/
+│       └── 001_init_equafit.sql
 └── ...
 ```
 
